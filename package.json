@@ -2,6 +2,6 @@
   "type": "module",
   "dependencies": {
     "formidable": "^2.1.1",
-    "pdf-parse": "1.1.1"
+    "pdfjs-dist": "^3.4.120"
   }
 }
