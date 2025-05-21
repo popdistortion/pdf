@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "formidable": "^2.1.1",
+    "pdf-parse": "1.1.1"
+  }
+}
