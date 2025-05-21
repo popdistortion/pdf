@@ -1,6 +1,6 @@
 import formidable from 'formidable';
 import fs from 'fs/promises';
-import pdfParse from 'pdf-parse';
+import { getDocument } from 'pdfjs-dist/legacy/build/pdf.js';
 
 export const config = {
   api: {
@@ -25,8 +25,17 @@ export default async function handler(req, res) {
 
     try {
       const dataBuffer = await fs.readFile(file.filepath);
-      const data = await pdfParse(dataBuffer);
-      const text = data.text.slice(0, 7000);
+      const pdf = await getDocument({ data: dataBuffer }).promise;
+      let textContent = '';
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const strings = content.items.map(item => item.str);
+        textContent += strings.join(' ') + '\n';
+      }
+
+      const text = textContent.slice(0, 7000);
 
       const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
